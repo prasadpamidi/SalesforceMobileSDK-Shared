@@ -86,6 +86,10 @@ AbstractSmartStoreTestSuite.prototype.querySoupNoAssertion = promiser(navigator.
 AbstractSmartStoreTestSuite.prototype.reIndexSoupNoAssertion = promiser(navigator.smartstore, "reIndexSoup", true);
 AbstractSmartStoreTestSuite.prototype.registerSoupNoAssertion = promiser(navigator.smartstore, "registerSoup", true);
 AbstractSmartStoreTestSuite.prototype.upsertSoupEntriesNoAssertion = promiser(navigator.smartstore, "upsertSoupEntries", true);
+    
+AbstractSmartStoreTestSuite.prototype.registerSoupWithSpec = promiser(navigator.smartstore, "registerSoupWithSpec", false);
+AbstractSmartStoreTestSuite.prototype.getSoupSpec = promiser(navigator.smartstore, "getSoupSpec", false);
+
 
 AbstractSmartStoreTestSuite.prototype.registerDefaultSoup = function() {
     return this.registerSoup(this.defaultSoupName, this.defaultSoupIndexes);

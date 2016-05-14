@@ -225,9 +225,76 @@ SmartStoreTestSuite.prototype.testRegisterBogusSoup = function()  {
             self.finalizeTest();
         });
 };
+    
+    
+/**
+ * TEST registerSoupWithSpec
+ */
+SmartStoreTestSuite.prototype.testRegisterSoupWithSpec = function()  {
+   console.log("In SFSmartStoreTestSuite.testRegisterSoupWithSpec");
+   var soupName =  "soupForRegisterWithSpec";
+   var self = this;
+   self.removeSoup(soupName)
+   .pipe(function() {
+         // Check soup does not exist
+         return self.soupExists(soupName);
+         })
+   .pipe(function(exists) {
+         QUnit.equals(exists, false, "soup should not already exist");
+         // Create soup
+         console.log("In SFSmartStoreTestSuite.testRegisterSoupWithSpec creating soup");
+         
+         return self.registerSoupWithSpec({"soupName": soupName, "features": ["externalStorage"]},
+                                                     [{path:"Name", type:"string"},
+                                                      {path:"Id", type:"string"}]);
+         })
+   .done(function(soupName2) {
+         console.log("In SFSmartStoreTestSuite.testRegisterSoupWithSpec soup creation complete "+soupName2);
+         QUnit.equals(soupName2 === "soupForRegisterWithSpec", true, "invalid soup name was registered");
+         self.finalizeTest();
+    });
+};
+ 
+/**
+ * TEST getSoupSpec
+ */
+SmartStoreTestSuite.prototype.testGetSoupSpec = function()  {
+    console.log("In SFSmartStoreTestSuite.testGetSoupSpec");
+    var soupName =  "soupForGetSoupSpec";
+    var self = this;
+    
+    // Start clean
+    self.removeSoup(soupName)
+    .pipe(function() {
+          // Check soup does not exist
+          return self.soupExists(soupName);
+          })
+    .pipe(function(exists) {
+          QUnit.equals(exists, false, "soup should not already exist");
+          // Create soup
+          console.log("In SFSmartStoreTestSuite.testGetSoupSpec creating soup");
 
+          return self.registerSoupWithSpec({"soupName": soupName, "features": ["externalStorage"]},
+                                                      [{path:"Name", type:"string"},
+                                                       {path:"Id", type:"string"}]);
+          })
+    .pipe(function(soupName2) {
+          console.log("In SFSmartStoreTestSuite.testGetSoupSpec soup creation complete "+soupName2);
 
-/** 
+          QUnit.equals(soupName2 === "soupForGetSoupSpec", true, "invalid soup name was registered");
+          // Create soup
+          return self.getSoupSpec(soupName2);
+          })
+    .done(function(soupSpec) {
+          QUnit.equals(soupSpec !== undefined, true, "soup spec not returned for the given soup");
+
+          console.log("In SFSmartStoreTestSuite.testGetSoupSpec soup spec get complete "+soupSpec);
+          self.finalizeTest();
+          });
+};
+
+    
+/**
  * TEST registerSoup
  */
 SmartStoreTestSuite.prototype.testRegisterSoupNoIndices = function()  {

@@ -31,6 +31,14 @@ var SERVICE = "com.salesforce.smartstore";
 var exec = require("com.salesforce.util.exec").exec;
 
 /**
+ * SoupSpec constructor
+ */
+var SoupSpec = function (soupName, features) {
+	this.soupName = soupName;
+	this.features = features;
+};
+
+/**
  * SoupIndexSpec consturctor
  */
 var SoupIndexSpec = function (path, type) {
@@ -195,6 +203,14 @@ var registerSoup = function (isGlobalStore, soupName, indexSpecs, successCB, err
         );
 };
 
+var registerSoupWithSpec = function (soupSpec, indexSpecs, successCB, errorCB) {
+	storeConsole.debug("SmartStore.registerSoupWithSpec: " + JSON.stringify(soupSpec) + ",indexSpecs=" + JSON.stringify(indexSpecs));
+	exec(SALESFORCE_MOBILE_SDK_VERSION, successCB, errorCB, SERVICE,
+		"pgRegisterSoup",
+		[{"soupSpec": soupSpec, "indexes": indexSpecs}]
+		);
+};
+
 var removeSoup = function (isGlobalStore, soupName, successCB, errorCB) {
     if (checkFirstArg(arguments)) return;
     storeConsole.debug("SmartStore.removeSoup:isGlobalStore=" +isGlobalStore+ ",soupName=" + soupName);
@@ -308,6 +324,14 @@ var removeFromSoup = function (isGlobalStore, soupName, entryIds, successCB, err
         );
 };
 
+var getSoupSpec = function (soupName, successCB, errorCB) {
+    storeConsole.debug("SmartStore.getSoupSpec: '" + soupName);
+    exec(SALESFORCE_MOBILE_SDK_VERSION, successCB, errorCB, SERVICE,
+         "pgGetSoupSpec",
+         [{"soupName": soupName}]
+        );
+};
+
 //====== Cursor manipulation ======
 var moveCursorToPageIndex = function (isGlobalStore, cursor, newPageIndex, successCB, errorCB) {
     if (checkFirstArg(arguments)) return;
@@ -368,6 +392,7 @@ module.exports = {
     querySoup: querySoup,
     reIndexSoup: reIndexSoup,
     registerSoup: registerSoup,
+	registerSoupWithSpec: registerSoupWithSpec,
     removeFromSoup: removeFromSoup,
     removeSoup: removeSoup,
     retrieveSoupEntries: retrieveSoupEntries,
@@ -377,8 +402,10 @@ module.exports = {
     soupExists: soupExists,
     upsertSoupEntries: upsertSoupEntries,
     upsertSoupEntriesWithExternalId: upsertSoupEntriesWithExternalId,
+    getSoupSpec: getSoupSpec,
 
     // Constructors
+    SoupSpec: SoupSpec,
     QuerySpec: QuerySpec,
     SoupIndexSpec: SoupIndexSpec,
     StoreCursor: StoreCursor
